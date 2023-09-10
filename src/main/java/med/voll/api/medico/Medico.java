@@ -24,6 +24,13 @@ import med.voll.api.direccion.Direccion;
 @EqualsAndHashCode(of = "id")
 public class Medico {
 	
+	public Medico(DatosRegistroMedico datos) {
+		this.nombre = datos.nombre();
+		this.email = datos.email();
+		this.documento = datos.documento();
+		this.especialidad = datos.especialidad();
+		this.direccion = new Direccion(datos.direccion());
+	}
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
