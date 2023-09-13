@@ -44,4 +44,15 @@ public class Medico {
 	@Embedded
 	private Direccion direccion;
 
+    public void actualizarDatos(DatosActualizarMedico datos) {
+		if(datos.nombre() != null){
+			this.nombre = datos.nombre();
+		}
+		if(datos.documento() != null){
+			this.documento = datos.documento();
+		}
+		if(datos.direccion() != null) {
+			this.direccion = direccion.actualizarDatos(datos.direccion());
+		}
+    }
 }
