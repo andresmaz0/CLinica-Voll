@@ -6,6 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
+/*
+Direccion no es una entidad pero se le pone esta anotación
+para poder reutilizarlo en medicos y usuarios
+ */
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

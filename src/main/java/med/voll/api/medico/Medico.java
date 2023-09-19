@@ -18,20 +18,12 @@ import med.voll.api.direccion.Direccion;
 @Table(name = "medicos")
 @Entity(name = "Medico")
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(of = "id")
+@Getter //lombok me genera automaticamente los getters de mis atributos
+@NoArgsConstructor //lombok me crea un constructor sin atributos
+@AllArgsConstructor //lombok me crea un constructor con todos los atributos
+@EqualsAndHashCode(of = "id") //lombok sobre escribe el metodo hashcode y equals por el programador
 public class Medico {
-	
-	public Medico(DatosRegistroMedico datos) {
-		this.nombre = datos.nombre();
-		this.email = datos.email();
-		this.telefono = datos.telefono();
-		this.documento = datos.documento();
-		this.especialidad = datos.especialidad();
-		this.direccion = new Direccion(datos.direccion());
-	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -39,10 +31,25 @@ public class Medico {
 	private String email;
 	private String telefono;
 	private String documento;
-	@Enumerated(EnumType.STRING)
+	private Boolean activo;
+
+	@Enumerated(EnumType.STRING)//Esto indica que los datos de el enum Especialidad seran guardados como Strirng
 	private Especialidad especialidad;
 	@Embedded
+	/*indica que los campos de la entidad incrustada deben ser mapeados
+	como parte de la entidad actual en lugar de como una entidad separada.
+	 */
 	private Direccion direccion;
+
+	public Medico(DatosRegistroMedico datos) {
+		this.activo = true;
+		this.nombre = datos.nombre();
+		this.email = datos.email();
+		this.telefono = datos.telefono();
+		this.documento = datos.documento();
+		this.especialidad = datos.especialidad();
+		this.direccion = new Direccion(datos.direccion());
+	}
 
     public void actualizarDatos(DatosActualizarMedico datos) {
 		if(datos.nombre() != null){
@@ -55,4 +62,8 @@ public class Medico {
 			this.direccion = direccion.actualizarDatos(datos.direccion());
 		}
     }
+
+	public void desactivarMedico() {
+		this.activo = false;
+	}
 }
