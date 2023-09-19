@@ -1,11 +1,13 @@
 package med.voll.api.controller;
 
 import jakarta.validation.Valid;
+import med.voll.api.direccion.DatosDireccion;
 import med.voll.api.medico.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,16 +35,23 @@ public class MedicoController {
 
 	@PutMapping
 	@Transactional //Nos permite guardar en la base de datos los cambios que se realizen al finalizar el metodo
-	public void ActualizarMedico(@RequestBody @Valid DatosActualizarMedico datos){
+	public ResponseEntity ActualizarMedico(@RequestBody @Valid DatosActualizarMedico datos){
 		Medico medico = medicoRepository.getReferenceById(datos.id());
 		medico.actualizarDatos(datos);
+		return ResponseEntity.ok(new DatosRespuestaMedico(medico.getId(), medico.getNombre(), medico.getEmail(),
+				medico.getTelefono(), medico.getEspecialidad().toString(),
+				new DatosDireccion(medico.getDireccion().getCalle(), medico.getDireccion().getDistrito(),
+						medico.getDireccion().getCiudad(), medico.getDireccion().getNumero(),
+						medico.getDireccion().getComplemento()));
 	}
 
 	@DeleteMapping("/{id}")
 	@Transactional
-	public void EliminarMedico(@PathVariable Long id){
+	public ResponseEntity EliminarMedico(@PathVariable Long id){
 		Medico medico = medicoRepository.getReferenceById(id);
 		medico.desactivarMedico();
+		return ResponseEntity.noContent().build();
+		//build convierte el codigo Http a un ResponseEntity
 	}
 	/*
 	public void EliminarMedico(@PathVariable Long id){
