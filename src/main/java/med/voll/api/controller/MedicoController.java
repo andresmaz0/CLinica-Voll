@@ -42,7 +42,7 @@ public class MedicoController {
 				medico.getTelefono(), medico.getEspecialidad().toString(),
 				new DatosDireccion(medico.getDireccion().getCalle(), medico.getDireccion().getDistrito(),
 						medico.getDireccion().getCiudad(), medico.getDireccion().getNumero(),
-						medico.getDireccion().getComplemento()));
+						medico.getDireccion().getComplemento())));
 	}
 
 	@DeleteMapping("/{id}")
