@@ -39,8 +39,8 @@ public class MedicoController {
 	}
 
 	@GetMapping // sirve para especificar el metodo cuando se realiza una solicitud GET
-	public Page<DatosListadoMedico> ListadoMedicos(@PageableDefault(size = 2) Pageable paginacion){
-		return medicoRepository.findAll(paginacion).map(DatosListadoMedico::new);
+	public ResponseEntity<Page<DatosListadoMedico>> ListadoMedicos(@PageableDefault(size = 2) Pageable paginacion){
+		return ResponseEntity.ok(medicoRepository.findAll(paginacion).map(DatosListadoMedico::new));
 	}
 
 	@PutMapping
