@@ -10,7 +10,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController // retornar Json o Xml o texto
@@ -24,8 +26,16 @@ public class MedicoController {
 
 	//@requestBody es para indicarle al codigo que tome el body que esta enviando el request
 	@PostMapping
-	public void RegistrarMedico(@RequestBody @Valid DatosRegistroMedico datos) {
-		medicoRepository.save(new Medico(datos));
+	public ResponseEntity<DatosRespuestaMedico> RegistrarMedico(@RequestBody @Valid DatosRegistroMedico datos,
+										  UriComponentsBuilder uriComponentsBuilder) {
+		Medico medico = medicoRepository.save(new Medico(datos));
+		DatosRespuestaMedico datosRespuestaMedico = new DatosRespuestaMedico(medico.getId(), medico.getNombre(), medico.getEmail(),
+				medico.getTelefono(), medico.getEspecialidad().toString(),
+				new DatosDireccion(medico.getDireccion().getCalle(), medico.getDireccion().getDistrito(),
+						medico.getDireccion().getCiudad(), medico.getDireccion().getNumero(),
+						medico.getDireccion().getComplemento()));
+		URI url = uriComponentsBuilder.path("/medicos/{id}").buildAndExpand(medico.getId()).toUri();
+		return ResponseEntity.created(url).body(datosRespuestaMedico);
 	}
 
 	@GetMapping // sirve para especificar el metodo cuando se realiza una solicitud GET
@@ -53,10 +63,15 @@ public class MedicoController {
 		return ResponseEntity.noContent().build();
 		//build convierte el codigo Http a un ResponseEntity
 	}
-	/*
-	public void EliminarMedico(@PathVariable Long id){
+
+	@GetMapping("/{id}")
+	public ResponseEntity<DatosRespuestaMedico> retornaDatosMedico(@PathVariable Long id) {
 		Medico medico = medicoRepository.getReferenceById(id);
-		medicoRepository.delete(medico);
+		var datosMedico = new DatosRespuestaMedico(medico.getId(), medico.getNombre(), medico.getEmail(),
+				medico.getTelefono(), medico.getEspecialidad().toString(),
+				new DatosDireccion(medico.getDireccion().getCalle(), medico.getDireccion().getDistrito(),
+						medico.getDireccion().getCiudad(), medico.getDireccion().getNumero(),
+						medico.getDireccion().getComplemento()));
+		return ResponseEntity.ok(datosMedico);
 	}
-	*/
 }
