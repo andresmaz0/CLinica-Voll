@@ -1,6 +1,7 @@
 package med.voll.api.controller;
 
 import jakarta.validation.Valid;
+import med.voll.api.Infra.security.DatosJwtToken;
 import med.voll.api.Infra.security.TokenService;
 import med.voll.api.domain.usuarios.DatosAutenticacionUsuarios;
 import med.voll.api.domain.usuarios.Usuario;
@@ -28,7 +29,7 @@ public class AutenticacionController {
                 datosAutenticacionUsuarios.clave());
         var UsuarioAutenticado = authenticationManager.authenticate(Authentication_token);
         var Jwt_token = tokenService.generarToken((Usuario) UsuarioAutenticado.getPrincipal());
-        return ResponseEntity.ok(Jwt_token);
+        return ResponseEntity.ok(new DatosJwtToken(Jwt_token));
     }
 
 }
